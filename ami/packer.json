@@ -1,0 +1,45 @@
+{
+    "variables" : {
+        "region" : "ap-southeast-2",
+        "source_ami" : "ami-07cc15c3ba6f8e287",
+        "aws_access_key_id": "{{env `AWS_ACCESS_KEY_ID`}}",
+        "aws_secret_access_key": "{{env `AWS_SECRET_ACCESS_KEY_ID`}}",
+        "aws_access_token": "{{env `AWS_ACCESS_TOKEN`}}"
+    },
+    "builders" : [
+        {
+            "access_key" : "{{user `aws_access_key_id`}}",
+            "secret_key" : "{{user `aws_secret_access_key`}}",
+            "type" : "amazon-ebs",
+            "profile" : "default",
+            "region" : "{{user `region`}}",
+            "instance_type" : "t2.micro",
+            "source_ami" : "{{user `source_ami`}}",
+            "ssh_username" : "ec2-user",
+            "ami_name" : "jenkins-master-2.190.1",
+            "ami_description" : "Amazon Linux Image with Jenkins Server",
+            "associate_public_ip_address" : true,
+            "tags" : {
+                "Tool" : "Packer",
+                "Author" : "rafaelgoncalvs"
+            }
+        }
+    ],
+    "provisioners" : [
+        {
+            "type" : "file",
+            "source" : "./plugins.txt",
+            "destination" : "/tmp/plugins.txt"
+        },
+        {
+            "type" : "file",
+            "source" : "./install-plugins.sh",
+            "destination" : "/tmp/install-plugins.sh"
+        },
+        {
+            "type" : "shell",
+            "script" : "./setup.sh",
+            "execute_command" : "sudo -E -S sh '{{ .Path }}'"
+        }
+    ]
+}
