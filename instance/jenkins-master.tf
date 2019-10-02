@@ -96,7 +96,7 @@ resource "aws_security_group" "jenkins_master_sg" {
 
   tags = {
     Name   = "jenkins_master_sg"
-    Author = "nexus-user-conference"
+    Author = "rafaelgoncalvs"
     Tool   = "Terraform"
   }
 }
